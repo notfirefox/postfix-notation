@@ -9,7 +9,7 @@ fn parse_line() -> Option<String> {
     Some(line.to_string())
 }
 
-fn parse_operation(part: String) -> Option<Box<dyn Fn(f64, f64) -> f64>> {
+fn parse_operation(part: &String) -> Option<Box<dyn Fn(f64, f64) -> f64>> {
     if part.len() != 1 {
         return None
     } 
@@ -22,13 +22,13 @@ fn parse_operation(part: String) -> Option<Box<dyn Fn(f64, f64) -> f64>> {
     }
 }
 
-fn calculate_postfix(line: String) -> Option<f64> {
+fn calculate_postfix(line: &String) -> Option<f64> {
     let mut stack: Vec<f64> = vec![];
     for part in line.split_whitespace() {
         if let Ok(num) = part.parse::<i64>() {
             stack.push(num as f64);
         } else {
-            let f = parse_operation(part.to_string())?;
+            let f = parse_operation(&part.to_string())?;
             let y = stack.pop()?;
             let x = stack.pop()?;
             let result = f(x, y);
@@ -40,7 +40,7 @@ fn calculate_postfix(line: String) -> Option<f64> {
 
 fn main() {
     if let Some(line) = parse_line() {
-        match calculate_postfix(line) {
+        match calculate_postfix(&line) {
             Some(result) => println!("Result: {}", result),
             None => println!("Could not calculate result from expression."),
         }
