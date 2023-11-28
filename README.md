@@ -1,5 +1,5 @@
 # Postfix Notation
-Postfix Notation Calculator (Reverse Polish Notation) Written In Rust.
+Postfix Notation (Reverse Polish Notation) Calculator Written In Rust.
 
 ## Examples
 The expression `2+2` can be expressed like this:
