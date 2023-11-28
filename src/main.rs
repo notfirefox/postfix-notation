@@ -38,6 +38,20 @@ fn calculate_postfix(line: &String) -> Option<f64> {
     stack.last().copied()
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_calculate_postfix() {
+        let input = "2 2 +";
+        assert_eq!(calculate_postfix(&input.to_string()), Some(4.0));
+
+        let input = "2 2 * 2 * 2 * 2 *";
+        assert_eq!(calculate_postfix(&input.to_string()), Some(32.0));
+    }
+}
+
 fn main() {
     if let Some(line) = parse_line() {
         match calculate_postfix(&line) {
