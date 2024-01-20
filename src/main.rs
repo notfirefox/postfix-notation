@@ -1,19 +1,14 @@
 use std::{io::{self, BufRead}};
 
 fn parse_line() -> Option<String> {
-    let mut iterator = io::stdin().lock().lines();
-    let line = match iterator.next()? {
-        Ok(x) => x,
-        Err(_) => return None,
-    };
-    Some(line.to_string())
+    io::stdin().lock().lines().next()?.ok()
 }
 
 fn parse_operation(part: &String) -> Option<Box<dyn Fn(f64, f64) -> f64>> {
     if part.len() != 1 {
         return None
-    } 
-    return match part.chars().nth(0)? {
+    }
+    match part.chars().next()? {
         '+' => Some(Box::new(|x, y| x + y)),
         '-' => Some(Box::new(|x, y| x - y)),
         '*' => Some(Box::new(|x, y| x * y)),
@@ -22,11 +17,11 @@ fn parse_operation(part: &String) -> Option<Box<dyn Fn(f64, f64) -> f64>> {
     }
 }
 
-fn calculate_postfix(line: &String) -> Option<f64> {
+fn calculate_postfix(line: &str) -> Option<f64> {
     let mut stack: Vec<f64> = vec![];
     for part in line.split_whitespace() {
-        if let Ok(num) = part.parse::<i64>() {
-            stack.push(num as f64);
+        if let Ok(num) = part.parse::<f64>() {
+            stack.push(num);
         } else {
             let f = parse_operation(&part.to_string())?;
             let y = stack.pop()?;
@@ -35,7 +30,16 @@ fn calculate_postfix(line: &String) -> Option<f64> {
             stack.push(result);
         }
     }
-    stack.last().copied()
+    return if stack.len() == 1 { stack.first().copied() } else { None }
+}
+
+fn main() {
+    parse_line().map_or_else(|| {
+        println!("Could not parse line.");
+    }, |line| calculate_postfix(&line).map_or_else(
+        || println!("Could not calculate result from expression."), 
+        |result| println!("Result: {result}")
+    ));
 }
 
 #[cfg(test)]
@@ -45,20 +49,9 @@ mod tests {
     #[test]
     fn test_calculate_postfix() {
         let input = "2 2 +";
-        assert_eq!(calculate_postfix(&input.to_string()), Some(4.0));
+        assert_eq!(calculate_postfix(input), Some(4.0));
 
         let input = "2 2 * 2 * 2 * 2 *";
-        assert_eq!(calculate_postfix(&input.to_string()), Some(32.0));
-    }
-}
-
-fn main() {
-    if let Some(line) = parse_line() {
-        match calculate_postfix(&line) {
-            Some(result) => println!("Result: {}", result),
-            None => println!("Could not calculate result from expression."),
-        }
-    } else {
-        println!("Could not parse line.")
+        assert_eq!(calculate_postfix(input), Some(32.0));
     }
 }
