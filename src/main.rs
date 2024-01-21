@@ -1,4 +1,4 @@
-use std::{io::{self, BufRead}};
+use std::io::{self, BufRead};
 
 fn parse_line() -> Option<String> {
     io::stdin().lock().lines().next()?.ok()
@@ -6,14 +6,14 @@ fn parse_line() -> Option<String> {
 
 fn parse_operation(part: &String) -> Option<Box<dyn Fn(f64, f64) -> f64>> {
     if part.len() != 1 {
-        return None
+        return None;
     }
     match part.chars().next()? {
         '+' => Some(Box::new(|x, y| x + y)),
         '-' => Some(Box::new(|x, y| x - y)),
         '*' => Some(Box::new(|x, y| x * y)),
         '/' => Some(Box::new(|x, y| x / y)),
-        _ => None
+        _ => None,
     }
 }
 
@@ -30,16 +30,25 @@ fn calculate_postfix(line: &str) -> Option<f64> {
             stack.push(result);
         }
     }
-    return if stack.len() == 1 { stack.first().copied() } else { None }
+    return if stack.len() == 1 {
+        stack.first().copied()
+    } else {
+        None
+    };
 }
 
 fn main() {
-    parse_line().map_or_else(|| {
-        println!("Could not parse line.");
-    }, |line| calculate_postfix(&line).map_or_else(
-        || println!("Could not calculate result from expression."), 
-        |result| println!("Result: {result}")
-    ));
+    parse_line().map_or_else(
+        || {
+            println!("Could not parse line.");
+        },
+        |line| {
+            calculate_postfix(&line).map_or_else(
+                || println!("Could not calculate result from expression."),
+                |result| println!("Result: {result}"),
+            );
+        },
+    );
 }
 
 #[cfg(test)]
