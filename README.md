@@ -1,5 +1,5 @@
 # Postfix Notation
-Postfix Notation (Reverse Polish Notation) Calculator.
+Postfix Notation Calculator
 
 ## :clipboard: Requirements 
 - Rust
@@ -10,12 +10,16 @@ Run the program using the following command.
 cargo run
 ```
 
-The expression `2+2` can be expressed like this:
+The calculation of the expression `2+2` could look like this:
 ```
+$ cargo run
 2 2 +
+Result: 4
 ```
 
-Let's take a look at `pow(2, 5)`:
+Lets try something more sophisticated such as `pow(2, 5)`:
 ```
+$ cargo run
 2 2 * 2 * 2 * 2 *
+Result: 32
 ```
